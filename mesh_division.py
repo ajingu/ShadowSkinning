@@ -33,7 +33,7 @@ if __name__ == "__main__":
             cv.line(dst, pt2, pt3, (0, 255, 0), 1, cv.LINE_AA)
             cv.line(dst, pt3, pt1, (0, 255, 0), 1, cv.LINE_AA)
 
-    # cv.imwrite("./images/dst.png", dst)
-    cv.imshow("dst", dst)
+    cv.imwrite("./images/mesh_division.png", dst)
+    cv.imshow("mesh_division", dst)
     cv.waitKey(0)
     cv.destroyAllWindows()

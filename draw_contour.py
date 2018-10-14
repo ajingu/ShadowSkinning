@@ -12,6 +12,7 @@ if __name__ == "__main__":
         if hierarchy[0][i][2] == -1:
             dst = cv.drawContours(dst, contours, i, (0, 0, 255), 1)
 
-    cv.imshow("dst", dst)
+    # cv.imwrite("./images/contour.png", dst)
+    cv.imshow("contour", dst)
     cv.waitKey(0)
     cv.destroyAllWindows()
