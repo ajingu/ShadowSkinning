@@ -114,6 +114,4 @@ dmypy.json
 .idea/
 
 # custom
-run_mobilenet.py
-run_opencv.py
 models/
