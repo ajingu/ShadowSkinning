@@ -14,3 +14,6 @@ You should install **tf_pose** module according to [instructions](https://github
   
 ### draw_skeleton.py
 ![skeleton](https://user-images.githubusercontent.com/20081122/47014227-99249580-d184-11e8-9e46-dd3ceb80ccb9.png)
+
+### skinning.py(nearest neighbour)
+![nearest](https://user-images.githubusercontent.com/20081122/47094883-07da1f80-d267-11e8-980b-8276d89ce946.png)
