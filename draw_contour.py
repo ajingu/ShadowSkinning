@@ -1,18 +1,15 @@
-import cv2 as cv
+import cv2
+
+from lib.contour import find_contours_and_hierarchy, find_human_contour, draw_contour
 
 if __name__ == "__main__":
-    src = cv.imread("./images/shadow.jpg")
-    gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
-    _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    _, contours, hierarchy = cv.findContours(thresh, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
+    src = cv2.imread("./images/shadow.jpg")
     dst = src.copy()
+    contours, hierarchy = find_contours_and_hierarchy(src)
+    human_contour = find_human_contour(contours, hierarchy)
+    draw_contour(dst, human_contour)
 
-    # draw contour
-    for i in range(len(contours)):
-        if hierarchy[0][i][2] == -1:
-            dst = cv.drawContours(dst, contours, i, (0, 0, 255), 1)
-
-    # cv.imwrite("./images/contour.png", dst)
-    cv.imshow("contour", dst)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    # cv2.imwrite("./images/contour.png", dst)
+    cv2.imshow("contour", dst)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
