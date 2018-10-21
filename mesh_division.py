@@ -1,11 +1,11 @@
-import cv2 as cv
+import cv2
+
+from lib.contour import find_contours_and_hierarchy
 
 if __name__ == "__main__":
-    src = cv.imread("./images/shadow.jpg")
-    gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
-    _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    _, contours, hierarchy = cv.findContours(thresh, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
+    src = cv2.imread("./images/shadow.jpg")
     dst = src.copy()
+    contours, hierarchy = find_contours_and_hierarchy(src)
 
     srcRect = (0, 0, src.shape[1], src.shape[0])
 
@@ -14,7 +14,7 @@ if __name__ == "__main__":
         if hierarchy[0][i][2] != -1:
             continue
 
-        subdivision = cv.Subdiv2D(srcRect)
+        subdivision = cv2.Subdiv2D(srcRect)
         for j in range(len(contours[i])):
             subdivision.insert(tuple(contours[i][j][0]))
 
@@ -26,14 +26,14 @@ if __name__ == "__main__":
             pt3 = (t[4], t[5])
 
             # skip triangle outside contour
-            if cv.pointPolygonTest(contours[i], ((t[0] + t[2] + t[4]) / 3, (t[1] + t[3] + t[5]) / 3), False) < 1:
+            if cv2.pointPolygonTest(contours[i], ((t[0] + t[2] + t[4]) / 3, (t[1] + t[3] + t[5]) / 3), False) < 1:
                 continue
 
-            cv.line(dst, pt1, pt2, (0, 255, 0), 1, cv.LINE_AA)
-            cv.line(dst, pt2, pt3, (0, 255, 0), 1, cv.LINE_AA)
-            cv.line(dst, pt3, pt1, (0, 255, 0), 1, cv.LINE_AA)
+            cv2.line(dst, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
+            cv2.line(dst, pt2, pt3, (0, 255, 0), 1, cv2.LINE_AA)
+            cv2.line(dst, pt3, pt1, (0, 255, 0), 1, cv2.LINE_AA)
 
-    cv.imwrite("./images/mesh_division.png", dst)
-    cv.imshow("mesh_division", dst)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    # cv2.imwrite("./images/mesh_division.png", dst)
+    cv2.imshow("mesh_division", dst)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

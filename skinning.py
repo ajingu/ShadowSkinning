@@ -6,6 +6,8 @@ from tf_pose.common import read_imgfile, CocoPart
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 
+from lib.contour import find_contours_and_hierarchy
+
 
 def squared_dist(point1, point2):
     return (point1[0]-point2[0]) ** 2 + (point1[1]-point2[1]) ** 2
@@ -31,9 +33,7 @@ if __name__ == '__main__':
             body_part_centers[i] = body_part_center
 
     # contour points coordinates & triangle vertices
-    gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = find_contours_and_hierarchy(src)
 
     contour_points = {}  # index -> coord
     triangle_vertices = []  # array of triangle vertices([pt1_index, pt2_index, pt3_index])
