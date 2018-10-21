@@ -1,12 +1,13 @@
 import cv2
 
-from lib.contour import find_contours_and_hierarchy, draw_contour_except_outer_rectangle
+from lib.contour import find_contours_and_hierarchy, find_human_contour, draw_contour
 
 if __name__ == "__main__":
     src = cv2.imread("./images/shadow.jpg")
     dst = src.copy()
     contours, hierarchy = find_contours_and_hierarchy(src)
-    dst = draw_contour_except_outer_rectangle(dst, contours, hierarchy)
+    human_contour = find_human_contour(contours, hierarchy)
+    draw_contour(dst, human_contour)
 
     # cv2.imwrite("./images/contour.png", dst)
     cv2.imshow("contour", dst)

@@ -8,8 +8,22 @@ def find_contours_and_hierarchy(src):
     return contours, hierarchy
 
 
-def draw_contour_except_outer_rectangle(img, contours, hierarchy):
-    for i in range(len(contours)):
-        if hierarchy[0][i][2] == -1:
-            cv2.drawContours(img, contours, i, (0, 0, 255), 1)
-    return img
+def find_human_contour(contours, hierarchy):
+    max_area = 0
+    human_contour = None
+
+    for i, contour in enumerate(contours):
+        # remove outer triangle
+        if hierarchy[0][i][2] > -1:
+            continue
+
+        area = cv2.contourArea(contour)
+        if max_area < area:
+            max_area = area
+            human_contour = contour
+
+    return human_contour
+
+
+def draw_contour(img, contour):
+    cv2.drawContours(img, [contour], 0, (0, 0, 255), 1)

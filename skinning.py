@@ -1,17 +1,13 @@
-import cv2
 import sys
+
+import cv2
 import matplotlib.pyplot as plt
 
 from tf_pose.common import read_imgfile, CocoPart
-from tf_pose.estimator import TfPoseEstimator
-from tf_pose.networks import get_graph_path
 
+from lib.common import calculate_squared_distance, draw_triangle
 from lib.contour import find_contours_and_hierarchy
 from lib.skeleton import SkeletonImplement
-
-
-def squared_dist(point1, point2):
-    return (point1[0]-point2[0]) ** 2 + (point1[1]-point2[1]) ** 2
 
 
 if __name__ == '__main__':
@@ -75,12 +71,12 @@ if __name__ == '__main__':
         nearest_body_part_index = None
 
         for j in range(len(body_part_centers)):
-            sq_dist = squared_dist(triangle_center, body_part_centers[j])
+            squared_distance = calculate_squared_distance(triangle_center, body_part_centers[j])
 
-            if tmp < sq_dist:
+            if tmp < squared_distance:
                 continue
 
-            tmp = sq_dist
+            tmp = squared_distance
             nearest_body_part_index = j
 
         nearest_body_parts[i] = nearest_body_part_index
@@ -89,9 +85,7 @@ if __name__ == '__main__':
     for i in [166, 173]:
         cv2.circle(dst, triangle_centers[i], 1, (255, 0, 0))
         pt1, pt2, pt3 = [contour_points[index] for index in triangle_vertices[i]]
-        cv2.line(dst, pt1, pt2, (0, 255, 0), 1, cv2.LINE_AA)
-        cv2.line(dst, pt2, pt3, (0, 255, 0), 1, cv2.LINE_AA)
-        cv2.line(dst, pt3, pt1, (0, 255, 0), 1, cv2.LINE_AA)
+        draw_triangle(dst, pt1, pt2. pt3)
         cv2.circle(dst, body_part_centers[nearest_body_parts[i]], 3, (0, 0, 255), thickness=3, lineType=8, shift=0)
 
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
