@@ -7,6 +7,7 @@ from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 
 from lib.contour import find_contours_and_hierarchy
+from lib.skeleton import SkeletonImplement
 
 
 def squared_dist(point1, point2):
@@ -18,8 +19,8 @@ if __name__ == '__main__':
     dst = src.copy()
 
     # body parts coordinates
-    estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368))
-    humans = estimator.inference(src, upsample_size=4.0)
+    skeletonImplement = SkeletonImplement()
+    humans = skeletonImplement.infer_skeletons(src)
     image_h, image_w = src.shape[:2]
     body_part_centers = {}
 
