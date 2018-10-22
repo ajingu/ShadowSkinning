@@ -12,7 +12,7 @@ if __name__ == "__main__":
     triangulation = SimpleTriangulation(src, human_contour)
     triangulation.draw_triangles(dst)
 
-    # cv2.imwrite("./images/mesh_division.png", dst)
+    # cv2.imwrite("./images/polygon_division.png", dst)
     cv2.imshow("mesh_division", dst)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
