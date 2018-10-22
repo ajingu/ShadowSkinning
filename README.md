@@ -16,4 +16,4 @@ You should install **tf_pose** module according to [instructions](https://github
 ![skeleton](https://user-images.githubusercontent.com/20081122/47014227-99249580-d184-11e8-9e46-dd3ceb80ccb9.png)
 
 ### run_skinning.py(nearest neighbour)
-![nearest](https://user-images.githubusercontent.com/20081122/47094883-07da1f80-d267-11e8-980b-8276d89ce946.png)
+![nearest](https://user-images.githubusercontent.com/20081122/47289631-94edf180-d636-11e8-90b2-aad39bc2e785.png)

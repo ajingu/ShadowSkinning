@@ -15,8 +15,6 @@ class NearestNeighbourSkinning:
         self.nearest_body_part_indices = []
         self.influence = []
 
-        self.triangle_centers = []
-
         image_height, image_width = src.shape[:2]
 
         # body_part_positions
@@ -47,7 +45,6 @@ class NearestNeighbourSkinning:
             if cv2.pointPolygonTest(human_contour, triangle_center, False) < 1:
                 continue
 
-            self.triangle_centers.append(triangle_center)
             self.triangle_vertex_indices.append([
                 contour_vertex_indices[pt1],
                 contour_vertex_indices[pt2],
@@ -55,13 +52,13 @@ class NearestNeighbourSkinning:
             ])
 
         # nearest_body_part_indices
-        for i in range(len(self.triangle_centers)):
-            triangle_center = self.triangle_centers[i]
+        for i in range(len(self.contour_vertex_positions)):
+            contour_vertex_position = self.contour_vertex_positions[i]
             tmp = sys.maxsize
             nearest_body_part_index = None
 
             for j in range(len(self.body_part_positions)):
-                squared_distance = calculate_squared_distance(triangle_center, self.body_part_positions[j])
+                squared_distance = calculate_squared_distance(contour_vertex_position, self.body_part_positions[j])
 
                 if tmp < squared_distance:
                     continue
