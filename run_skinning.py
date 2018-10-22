@@ -6,7 +6,7 @@ from tf_pose.common import read_imgfile
 from lib.common import draw_circle
 from lib.contour import find_contours_and_hierarchy, find_human_contour
 from lib.skeleton import SkeletonImplement
-from lib.skinning import NearestNeighbourSkinning
+from lib.skinning import Skinning
 
 
 if __name__ == '__main__':
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     skeletonImplement = SkeletonImplement()
     humans = skeletonImplement.infer_skeletons(src)
 
-    skinning = NearestNeighbourSkinning(src, humans[0], human_contour)
+    skinning = Skinning(src, humans[0], human_contour)
 
     # visualization
     for i in [100, 300, 500]:
