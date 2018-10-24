@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from tf_pose.common import CocoColors
 
 from lib.binarization import to_binary_image
-from lib.blob import extract_human_blob
 from lib.common import calculate_squared_distance
 
 
@@ -33,11 +32,9 @@ def calculate_nearest_neighbour(contour_vertex_positions, body_part_positions):
 
 
 def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, body_part_positions):
-    human_blob = extract_human_blob(img)
-    black_pixel_positions = find_black_pixel_positions(human_blob)
+    black_pixel_positions = find_black_pixel_positions(img)
     black_pixel_positions.extend(contour_vertex_positions)
-    black_pixel_positions = list(set(black_pixel_positions))
-    black_pixels_body_part_dict = {position: None for position in black_pixel_positions}
+    black_pixels_body_part_dict = {position: None for position in set(black_pixel_positions)}
     remaining_pixels_body_part_dict = black_pixels_body_part_dict.copy()
 
     for i, body_part_position in enumerate(body_part_positions):
