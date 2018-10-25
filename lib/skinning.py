@@ -4,7 +4,8 @@ import cv2
 
 from tf_pose.common import CocoPart
 
-from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour
+from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour, \
+    calculate_k_nearest_neighbour_within_contour
 
 
 class Skinning:
@@ -59,6 +60,8 @@ class Skinning:
             self.nearest_body_part_indices = calculate_nearest_neighbour_within_contour(src,
                                                                                         self.contour_vertex_positions,
                                                                                         self.body_part_positions)
+        elif algorithm == "k_nearest_neighbour_within_contour":
+            calculate_k_nearest_neighbour_within_contour(src, self.contour_vertex_positions, self.body_part_positions)
         else:
             print("The algorithm name is not found.")
             sys.exit(1)
