@@ -21,6 +21,7 @@ class Skinning:
         # body_part_positions
         for i in range(CocoPart.Background.value):
             if i not in human.body_parts.keys():
+                self.body_part_positions.append((0,0))
                 continue
 
             body_part = human.body_parts[i]
@@ -61,7 +62,7 @@ class Skinning:
                                                                                         self.contour_vertex_positions,
                                                                                         self.body_part_positions)
         elif algorithm == "k_nearest_neighbour_within_contour":
-            calculate_k_nearest_neighbour_within_contour(src, self.contour_vertex_positions, self.body_part_positions)
+            self.nearest_body_part_indices = calculate_k_nearest_neighbour_within_contour(src, self.contour_vertex_positions, self.body_part_positions)
         else:
             print("The algorithm name is not found.")
             sys.exit(1)
