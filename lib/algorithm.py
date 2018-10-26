@@ -42,7 +42,10 @@ def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, bo
 
     for i, body_part_position in enumerate(body_part_positions):
         black_pixels_body_part_dict[body_part_position] = i
-        del remaining_pixels_body_part_dict[body_part_position]
+        try:
+            del remaining_pixels_body_part_dict[body_part_position]
+        except KeyError:
+            pass
 
     while len(remaining_pixels_body_part_dict) > 0:
         for pixel_position in list(remaining_pixels_body_part_dict):
@@ -79,7 +82,10 @@ def calculate_k_nearest_neighbour_within_contour(img, contour_vertex_positions, 
                       for black_pixel_position in black_pixel_positions}
 
     for index, body_part_position in enumerate(body_part_positions):
-        influence_dict[body_part_position][index] = 1
+        try:
+            influence_dict[body_part_position][index] = 1
+        except KeyError:
+            pass
 
     count = 0
     for _ in range(iteration):  # 輪郭点それぞれに一個以上集まったら？
