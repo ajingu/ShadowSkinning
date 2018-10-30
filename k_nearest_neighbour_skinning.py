@@ -1,3 +1,5 @@
+import sys
+
 import cv2
 import matplotlib.pyplot as plt
 
@@ -5,7 +7,7 @@ from tf_pose.common import read_imgfile
 
 from lib.common import draw_circle
 from lib.contour import find_human_contour
-from lib.skeleton import SkeletonImplement
+from lib.skeleton import SkeletonImplement, SkeletonTest
 from lib.skinning import Skinning
 
 if __name__ == '__main__':
@@ -16,10 +18,16 @@ if __name__ == '__main__':
     skeletonImplement = SkeletonImplement()
     humans = skeletonImplement.infer_skeletons(src)
 
+    skeletonTest = SkeletonTest(humans[0], human_contour, src.shape)
+    skeletonTest.report()
+    if not skeletonTest.is_reliable():
+        print("This skeleton model is not reliable.")
+        sys.exit(0)
+
     skinning = Skinning(src, humans[0], human_contour, algorithm="k_nearest_neighbour_within_contour")
 
     # visualization
-    #for i in [100, 300, 500]:
+    # for i in [100, 300, 500]:
     #    draw_circle(dst, skinning.contour_vertex_positions[i], (255, 0, 0))
     #    draw_circle(dst, skinning.body_part_positions[skinning.nearest_body_part_indices[i]])
 
