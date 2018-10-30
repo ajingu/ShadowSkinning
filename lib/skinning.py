@@ -4,11 +4,12 @@ import cv2
 
 from tf_pose.common import CocoPart
 
-from lib.common import calculate_squared_distance
+from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour, \
+    calculate_k_nearest_neighbour_within_contour
 
 
-class NearestNeighbourSkinning:
-    def __init__(self, src, human, human_contour):
+class Skinning:
+    def __init__(self, src, human, human_contour, algorithm="nearest_neighbour"):
         self.body_part_positions = []
         self.contour_vertex_positions = []
         self.triangle_vertex_indices = []
@@ -20,6 +21,7 @@ class NearestNeighbourSkinning:
         # body_part_positions
         for i in range(CocoPart.Background.value):
             if i not in human.body_parts.keys():
+                self.body_part_positions.append((0, 0))
                 continue
 
             body_part = human.body_parts[i]
@@ -52,21 +54,20 @@ class NearestNeighbourSkinning:
             ])
 
         # nearest_body_part_indices
-        for i in range(len(self.contour_vertex_positions)):
-            contour_vertex_position = self.contour_vertex_positions[i]
-            tmp = sys.maxsize
-            nearest_body_part_index = None
-
-            for j in range(len(self.body_part_positions)):
-                squared_distance = calculate_squared_distance(contour_vertex_position, self.body_part_positions[j])
-
-                if tmp < squared_distance:
-                    continue
-
-                tmp = squared_distance
-                nearest_body_part_index = j
-
-            self.nearest_body_part_indices.append(nearest_body_part_index)
+        if algorithm == "nearest_neighbour":
+            self.nearest_body_part_indices = calculate_nearest_neighbour(self.contour_vertex_positions,
+                                                                         self.body_part_positions)
+        elif algorithm == "nearest_neighbour_within_contour":
+            self.nearest_body_part_indices = calculate_nearest_neighbour_within_contour(src,
+                                                                                        self.contour_vertex_positions,
+                                                                                        self.body_part_positions)
+        elif algorithm == "k_nearest_neighbour_within_contour":
+            self.nearest_body_part_indices = calculate_k_nearest_neighbour_within_contour(src,
+                                                                                          self.contour_vertex_positions,
+                                                                                          self.body_part_positions)
+        else:
+            print("The algorithm name is not found.")
+            sys.exit(1)
 
         # influence
         for i in range(len(self.nearest_body_part_indices)):
