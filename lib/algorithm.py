@@ -1,15 +1,14 @@
-import sys
 import random
+import sys
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from tf_pose.common import CocoColors
-
 from lib.blob import extract_human_blob
 from lib.binarization import to_binary_image
 from lib.common import calculate_squared_distance
+from lib.skeleton import SkeletonColors
 
 
 def calculate_nearest_neighbour(contour_vertex_positions, body_part_positions):
@@ -64,7 +63,9 @@ def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, bo
 
     # dst = img.copy()
     # for position, index in black_pixels_body_part_dict.items():
-    #    cv2.circle(dst, position, 1, CocoColors[index])
+    #    if index == 13:
+    #        print("it's 13")
+    #    cv2.circle(dst, position, 1, SkeletonColors[index])
     # plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
     # plt.show()
 

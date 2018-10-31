@@ -16,16 +16,17 @@ if __name__ == '__main__':
     human_contour = find_human_contour(src)
 
     skeletonImplement = SkeletonImplement()
-    humans = skeletonImplement.infer_skeletons(src)
+    human = skeletonImplement.infer_skeleton(src)
+    human = skeletonImplement.remove_unused_joints(human)
 
-    skeletonTest = SkeletonTest(humans[0], human_contour, src.shape)
+    skeletonTest = SkeletonTest(human, human_contour, src.shape)
     skeletonTest.report()
     if not skeletonTest.is_reliable():
         print("This skeleton model is not reliable.")
         sys.exit(0)
 
-    # skinning = Skinning(src, humans[0], human_contour)
-    skinning = Skinning(src, humans[0], human_contour, algorithm="nearest_neighbour_within_contour")
+    # skinning = Skinning(src, humans, human_contour)
+    skinning = Skinning(src, human, human_contour, algorithm="nearest_neighbour_within_contour")
 
     # visualization
     for i in [100, 300, 500]:

@@ -1,20 +1,51 @@
+from enum import Enum
+
 import cv2
 
-from tf_pose.common import CocoPart
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
+
+
+class SkeletonPart(Enum):
+    Nose = 0
+    Neck = 1
+    RShoulder = 2
+    RElbow = 3
+    RWrist = 4
+    LShoulder = 5
+    LElbow = 6
+    LWrist = 7
+    RHip = 8
+    RKnee = 9
+    RAnkle = 10
+    LHip = 11
+    LKnee = 12
+    LAnkle = 13
+
+
+SkeletonColors = [
+    [255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0],
+    [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255]
+]
 
 
 class SkeletonImplement:
     def __init__(self):
         self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368))
 
-    def infer_skeletons(self, src):
-        return self.estimator.inference(src, upsample_size=4.0)
+    def infer_skeleton(self, src):
+        humans = self.estimator.inference(src, upsample_size=4.0)
+        return humans[0]
 
-    def draw_skeletons(self, img):
-        humans = self.infer_skeletons(img)
-        return self.estimator.draw_humans(img, humans, imgcopy=False)
+    def remove_unused_joints(self, human):
+        for unused_index in [14, 15, 16, 17, 18]:
+            if unused_index in human.body_parts.keys():
+                del human.body_parts[unused_index]
+
+        return human
+
+    def draw_skeleton(self, img, human):
+        return self.estimator.draw_humans(img, [human], imgcopy=False)
 
 
 class SkeletonTest:
@@ -27,7 +58,7 @@ class SkeletonTest:
 
         body_part_positions = []
 
-        for joint_index in range(CocoPart.Background.value):
+        for joint_index in range(SkeletonPart.LAnkle.value + 1):
             if joint_index in human.body_parts.keys():
                 self.isAcquired.append(True)
                 body_part = human.body_parts[joint_index]
@@ -44,13 +75,12 @@ class SkeletonTest:
                                 for body_part_position in body_part_positions]
 
     # Change conditions freely
-    # [Example] Ignore REye, LEye, REar, LEar
     def is_reliable(self):
         minimum_probability = 0.2
 
-        all_joints_are_acquired = all(self.isAcquired[:14])
-        all_joints_are_reliable = all([p > minimum_probability for p in self.probability[:14]])
-        all_joints_are_within_contour = all(self.isWithinContour[:14])
+        all_joints_are_acquired = all(self.isAcquired)
+        all_joints_are_reliable = all([p > minimum_probability for p in self.probability])
+        all_joints_are_within_contour = all(self.isWithinContour)
 
         return all_joints_are_acquired and all_joints_are_reliable and all_joints_are_within_contour
 
