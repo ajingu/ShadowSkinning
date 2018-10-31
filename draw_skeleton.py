@@ -10,7 +10,8 @@ if __name__ == '__main__':
     dst = src.copy()
 
     skeletonImplement = SkeletonImplement()
-    dst = skeletonImplement.draw_skeletons(dst)
+    human = skeletonImplement.infer_skeleton(src)
+    dst = skeletonImplement.draw_skeleton(dst, human)
 
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
     plt.show()

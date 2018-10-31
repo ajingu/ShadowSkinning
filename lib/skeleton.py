@@ -9,12 +9,12 @@ class SkeletonImplement:
     def __init__(self):
         self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368))
 
-    def infer_skeletons(self, src):
-        return self.estimator.inference(src, upsample_size=4.0)
+    def infer_skeleton(self, src):
+        humans = self.estimator.inference(src, upsample_size=4.0)
+        return humans[0]
 
-    def draw_skeletons(self, img):
-        humans = self.infer_skeletons(img)
-        return self.estimator.draw_humans(img, humans, imgcopy=False)
+    def draw_skeleton(self, img, human):
+        return self.estimator.draw_humans(img, [human], imgcopy=False)
 
 
 class SkeletonTest:
