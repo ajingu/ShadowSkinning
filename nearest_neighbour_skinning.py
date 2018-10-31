@@ -17,6 +17,7 @@ if __name__ == '__main__':
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
+    human = skeletonImplement.remove_unused_joints(human)
 
     skeletonTest = SkeletonTest(human, human_contour, src.shape)
     skeletonTest.report()

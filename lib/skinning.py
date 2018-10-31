@@ -2,10 +2,9 @@ import sys
 
 import cv2
 
-from tf_pose.common import CocoPart
-
 from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour, \
     calculate_k_nearest_neighbour_within_contour
+from lib.skeleton import SkeletonPart
 
 
 class Skinning:
@@ -19,7 +18,7 @@ class Skinning:
         image_height, image_width = src.shape[:2]
 
         # body_part_positions
-        for i in range(CocoPart.Background.value):
+        for i in range(SkeletonPart.LAnkle.value + 1):
             if i not in human.body_parts.keys():
                 self.body_part_positions.append((0, 0))
                 continue
