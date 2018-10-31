@@ -13,7 +13,9 @@ You should install **tf_pose** module according to [instructions](https://github
 ![polygon_division](https://user-images.githubusercontent.com/20081122/46914478-4ce92200-cfd9-11e8-8ab6-f1dfdf6c4d6d.png)
   
 ### draw_skeleton.py
-![skeleton](https://user-images.githubusercontent.com/20081122/47014227-99249580-d184-11e8-9e46-dd3ceb80ccb9.png)
+![skeleton](https://user-images.githubusercontent.com/20081122/47789124-0f192700-dd57-11e8-8060-84647280fb8e.PNG)
 
 ### nearest_neighbour_skinning.py
 ![nearest](https://user-images.githubusercontent.com/20081122/47289631-94edf180-d636-11e8-90b2-aad39bc2e785.png)
+
+![skinning](https://user-images.githubusercontent.com/20081122/47789131-117b8100-dd57-11e8-8157-54090a585416.PNG)
