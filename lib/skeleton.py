@@ -30,8 +30,8 @@ SkeletonColors = [
 
 
 class SkeletonImplement:
-    def __init__(self):
-        self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368))
+    def __init__(self, model, tf_config=None):
+        self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368), tf_config=tf_config)
 
     def infer_skeleton(self, src):
         humans = self.estimator.inference(src, upsample_size=4.0)
