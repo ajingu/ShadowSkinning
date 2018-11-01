@@ -8,7 +8,7 @@ from lib.skeleton import SkeletonPart
 
 
 class Skinning:
-    def __init__(self, src, human, human_contour, algorithm="nearest_neighbour"):
+    def __init__(self, src, human, human_contour, calc_skinning=True, algorithm="nearest_neighbour"):
         self.body_part_positions = []
         self.contour_vertex_positions = []
         self.triangle_vertex_indices = []
@@ -51,6 +51,9 @@ class Skinning:
                 contour_vertex_indices[pt2],
                 contour_vertex_indices[pt3]
             ])
+
+        if not calc_skinning:
+            return
 
         # nearest_body_part_indices
         if algorithm == "nearest_neighbour":
