@@ -11,7 +11,6 @@ from lib.skeleton import SkeletonImplement, SkeletonTest
 from lib.skinning import Skinning
 from lib.watch import watch_image_generation
 
-IMAGE_NAME = "image.jpg"
 TARGET_DIRECTORY_PATH = "./images"
 
 
@@ -44,4 +43,4 @@ def run_skinning(image_path):
 
 
 if __name__ == '__main__':
-    watch_image_generation(run_skinning, TARGET_DIRECTORY_PATH, IMAGE_NAME)
+    watch_image_generation(run_skinning, TARGET_DIRECTORY_PATH)

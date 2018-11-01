@@ -5,32 +5,27 @@ from watchdog.observers import Observer
 
 
 class ImageGenerationEventHandler(PatternMatchingEventHandler):
-    def __init__(self, patterns, callback, directory_path, image_name):
+    def __init__(self, patterns, callback):
         super(ImageGenerationEventHandler, self).__init__(patterns=patterns)
         self.callback = callback
-        self.image_path = directory_path + "/" + image_name
-        print(self.image_path)
 
     def on_created(self, event):
-        print("image.jpg was created")
-        self.callback(self.image_path)
+        src_path = event.src_path.replace("\\", "/")
+        print(src_path + " was created")
+        self.callback(src_path)
 
     def on_deleted(self, event):
         pass
 
     def on_modified(self, event):
-        print("image.jpg was modified")
-        self.callback(self.image_path)
+        pass
 
     def on_moved(self, event):
-        print("image.jpg was moved")
-        self.callback(self.image_path)
-
-    # TODO: いらないやつをpassしてみる
+        pass
 
 
-def watch_image_generation(callback, directory_path, image_name):
-    event_handler = ImageGenerationEventHandler(["*.jpg"], callback, directory_path, image_name)
+def watch_image_generation(callback, directory_path):
+    event_handler = ImageGenerationEventHandler(["*.jpg"], callback)
     observer = Observer()
     observer.schedule(event_handler, directory_path)
     observer.start()
