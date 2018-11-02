@@ -1,3 +1,4 @@
+import os
 import time
 
 from watchdog.events import PatternMatchingEventHandler
@@ -12,7 +13,12 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
     def on_created(self, event):
         src_path = event.src_path.replace("\\", "/")
         print(src_path + " was created")
-        self.callback(src_path)
+        frame_index = os.path.splitext(os.path.basename(src_path))[0].replace("image_", "")
+
+        # Avoid the case of not finishing generating images
+        time.sleep(0.1)
+
+        self.callback(src_path, frame_index)
 
     def on_deleted(self, event):
         pass
@@ -25,7 +31,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
 
 def watch_image_generation(callback, directory_path):
-    event_handler = ImageGenerationEventHandler(["*.jpg"], callback)
+    event_handler = ImageGenerationEventHandler([directory_path + "/image_*.jpg"], callback)
     observer = Observer()
     observer.schedule(event_handler, directory_path)
     observer.start()

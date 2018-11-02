@@ -14,9 +14,17 @@ from lib.watch import watch_image_generation
 TARGET_DIRECTORY_PATH = "./images"
 
 
-def run_skinning(image_path):
+def run_skinning(image_path, frame_index):
     src = read_imgfile(image_path, None, None)
-    dst = src.copy()
+
+    try:
+        dst = src.copy()
+    except AttributeError:
+        print(image_path + " is not found.")
+        return
+
+    print("Frame Index:", frame_index)
+
     human_contour = find_human_contour(src)
 
     skeleton_implement = SkeletonImplement()
