@@ -3,11 +3,9 @@ import sys
 
 import cv2
 import matplotlib.pyplot as plt
-import numpy as np
 
 from lib.blob import extract_human_blob
 from lib.binarization import to_binary_image
-from lib.common import calculate_squared_distance
 from lib.skeleton import SkeletonColors
 
 
@@ -74,61 +72,8 @@ def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, bo
     return nearest_body_part_indices
 
 
-def calculate_k_nearest_neighbour_within_contour(img, contour_vertex_positions, body_part_positions, iteration=50):
-    human_blob = extract_human_blob(img)
-    black_pixel_positions = find_black_pixel_positions(human_blob)
-    black_pixel_positions.extend(contour_vertex_positions)
-
-    influence_dict = {black_pixel_position: np.full(len(body_part_positions), None)
-                      for black_pixel_position in black_pixel_positions}
-
-    for index, body_part_position in enumerate(body_part_positions):
-        try:
-            influence_dict[body_part_position][index] = 1
-        except KeyError:
-            pass
-
-    count = 0
-    for _ in range(iteration):  # 輪郭点それぞれに一個以上集まったら？
-        count += 1
-
-        for body_part_index in range(len(body_part_positions)):
-            queue = []
-            for pixel_position in black_pixel_positions:
-                if influence_dict[pixel_position][body_part_index] is not None:
-                    continue
-
-                for delta_x, delta_y in [[0, -1], [0, 1], [1, 0], [-1, 0]]:
-                    neighbour_pixel_position = (pixel_position[0] + delta_x, pixel_position[1] + delta_y)
-                    if neighbour_pixel_position not in influence_dict:
-                        continue
-
-                    if influence_dict[neighbour_pixel_position][body_part_index] is not None:
-                        queue.append([pixel_position, body_part_index, count])
-                        break
-
-            for queue_position, queue_index, queue_count in queue:
-                influence_dict[queue_position][queue_index] = queue_count
-
-    k_nearest_body_part_indices = []
-    for i, contour_vertex_position in enumerate(contour_vertex_positions):
-        influence_array = influence_dict[contour_vertex_position]
-        # if i in [50, 250, 400]:
-        #    print(influence_array)
-        influence_array = np.where(influence_array == None, iteration + 1, influence_array)
-        sorted_influence_array = np.argsort(influence_array)
-        k_nearest_body_part_indices.append([[body_part_index, influence_array[body_part_index]]
-                                            for i, body_part_index in enumerate(sorted_influence_array)
-                                            if influence_array[body_part_index] < iteration + 1])
-
-    # dst = img.copy()
-    # for j in [50, 250, 400]:
-    #    print(k_nearest_body_part_indices[j])
-    #    cv2.circle(dst, contour_vertex_positions[j], 3, (0, 255, 0), cv2.FILLED)
-    #plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
-    #plt.show()
-
-    return k_nearest_body_part_indices
+def calculate_squared_distance(pt1, pt2):
+    return (pt1[0] - pt2[0]) ** 2 + (pt1[1] - pt2[1]) ** 2
 
 
 def find_black_pixel_positions(src):

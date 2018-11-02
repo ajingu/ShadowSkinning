@@ -1,25 +1,19 @@
 import sys
 
-import cv2
-import matplotlib.pyplot as plt
-
 from tf_pose.common import read_imgfile
 
-from lib.common import draw_circle
 from lib.contour import find_human_contour
 from lib.skeleton import SkeletonImplement, SkeletonTest
-from lib.skinning import Skinning
+from lib.shadow import Shadow
 from lib.watch import watch_image_generation
 
 TARGET_DIRECTORY_PATH = "./images"
 
 
-def run_skinning(image_path, frame_index):
+def get_shadow_info(image_path, frame_index):
     src = read_imgfile(image_path, None, None)
 
-    try:
-        dst = src.copy()
-    except AttributeError:
+    if src is None:
         print(image_path + " is not found.")
         return
 
@@ -37,18 +31,12 @@ def run_skinning(image_path, frame_index):
         print("This skeleton model is not reliable.")
         sys.exit(0)
 
-    # skinning = Skinning(src, humans, human_contour)
-    skinning = Skinning(src, human, human_contour, algorithm="nearest_neighbour_within_contour")
+    shadow = Shadow(src.shape, human, human_contour)
 
-    # visualization
-    for i in [100, 300, 500]:
-        draw_circle(dst, skinning.contour_vertex_positions[i], (255, 0, 0))
-        draw_circle(dst, skinning.body_part_positions[skinning.nearest_body_part_indices[i]])
-
-    # cv2.imwrite("./images/nearest.png", dst)
-    plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
-    plt.show()
+    print("The number of body parts:", len(shadow.body_part_positions))
+    print("The number of contour vertices:", len(shadow.contour_vertex_positions))
+    print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
 
 
 if __name__ == '__main__':
-    watch_image_generation(run_skinning, TARGET_DIRECTORY_PATH)
+    watch_image_generation(get_shadow_info, TARGET_DIRECTORY_PATH)

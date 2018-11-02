@@ -1,18 +1,15 @@
 import cv2
 
-from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour
 from lib.skeleton import SkeletonPart
 
 
-class Skinning:
-    def __init__(self, src, human, human_contour, algorithm="nearest_neighbour"):
+class Shadow:
+    def __init__(self, src_shape, human, human_contour):
         self.body_part_positions = []
         self.contour_vertex_positions = []
         self.triangle_vertex_indices = []
-        self.nearest_body_part_indices = []
-        self.influence = []
 
-        image_height, image_width = src.shape[:2]
+        image_height, image_width = src_shape[:2]
 
         # body_part_positions
         for i in range(SkeletonPart.LAnkle.value + 1):
@@ -48,19 +45,3 @@ class Skinning:
                 contour_vertex_indices[pt2],
                 contour_vertex_indices[pt3]
             ])
-
-        # nearest_body_part_indices
-        if algorithm == "nearest_neighbour":
-            self.nearest_body_part_indices = calculate_nearest_neighbour(self.contour_vertex_positions,
-                                                                         self.body_part_positions)
-        elif algorithm == "nearest_neighbour_within_contour":
-            self.nearest_body_part_indices = calculate_nearest_neighbour_within_contour(src,
-                                                                                        self.contour_vertex_positions,
-                                                                                        self.body_part_positions)
-        else:
-            print("The algorithm name is not found.")
-            return
-
-        # influence
-        for i in range(len(self.nearest_body_part_indices)):
-            self.influence.append(1)

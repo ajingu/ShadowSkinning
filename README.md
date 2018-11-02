@@ -19,3 +19,9 @@ You should install **tf_pose** module according to [instructions](https://github
 ![nearest](https://user-images.githubusercontent.com/20081122/47289631-94edf180-d636-11e8-90b2-aad39bc2e785.png)
 
 ![skinning](https://user-images.githubusercontent.com/20081122/47789131-117b8100-dd57-11e8-8157-54090a585416.PNG)
+
+
+### watch_image_generation_then_get_shadow_info.py
+- Assign the directory path you want to watch to `TARGET_DIRECTORY_PATH`.
+- When you create a image which name is `image_*.jpg` under `TARGET_DIRECTORY_PATH`, that image will be analyzed automatically.
+- The shadow analysis is continued in an endless loop.
