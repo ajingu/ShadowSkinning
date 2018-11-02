@@ -1,6 +1,6 @@
 import cv2
 
-from lib.common import draw_triangle
+from lib.draw import draw_triangle
 
 
 class SimpleTriangulation:

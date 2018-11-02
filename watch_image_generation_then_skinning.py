@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from tf_pose.common import read_imgfile
 
-from lib.common import draw_circle
+from lib.draw import draw_circle
 from lib.contour import find_human_contour
 from lib.skeleton import SkeletonImplement, SkeletonTest
 from lib.skinning import Skinning
@@ -45,7 +45,6 @@ def run_skinning(image_path, frame_index):
         draw_circle(dst, skinning.contour_vertex_positions[i], (255, 0, 0))
         draw_circle(dst, skinning.body_part_positions[skinning.nearest_body_part_indices[i]])
 
-    # cv2.imwrite("./images/nearest.png", dst)
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
     plt.show()
 

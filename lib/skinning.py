@@ -1,14 +1,11 @@
-import sys
-
 import cv2
 
-from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour, \
-    calculate_k_nearest_neighbour_within_contour
+from lib.algorithm import calculate_nearest_neighbour, calculate_nearest_neighbour_within_contour
 from lib.skeleton import SkeletonPart
 
 
 class Skinning:
-    def __init__(self, src, human, human_contour, calc_skinning=True, algorithm="nearest_neighbour"):
+    def __init__(self, src, human, human_contour, algorithm="nearest_neighbour"):
         self.body_part_positions = []
         self.contour_vertex_positions = []
         self.triangle_vertex_indices = []
@@ -52,9 +49,6 @@ class Skinning:
                 contour_vertex_indices[pt3]
             ])
 
-        if not calc_skinning:
-            return
-
         # nearest_body_part_indices
         if algorithm == "nearest_neighbour":
             self.nearest_body_part_indices = calculate_nearest_neighbour(self.contour_vertex_positions,
@@ -63,13 +57,9 @@ class Skinning:
             self.nearest_body_part_indices = calculate_nearest_neighbour_within_contour(src,
                                                                                         self.contour_vertex_positions,
                                                                                         self.body_part_positions)
-        elif algorithm == "k_nearest_neighbour_within_contour":
-            self.nearest_body_part_indices = calculate_k_nearest_neighbour_within_contour(src,
-                                                                                          self.contour_vertex_positions,
-                                                                                          self.body_part_positions)
         else:
             print("The algorithm name is not found.")
-            sys.exit(1)
+            return
 
         # influence
         for i in range(len(self.nearest_body_part_indices)):

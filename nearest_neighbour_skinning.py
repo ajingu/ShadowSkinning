@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from tf_pose.common import read_imgfile
 
-from lib.common import draw_circle
+from lib.draw import draw_circle
 from lib.contour import find_human_contour
 from lib.skeleton import SkeletonImplement, SkeletonTest
 from lib.skinning import Skinning
