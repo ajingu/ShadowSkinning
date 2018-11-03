@@ -13,7 +13,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
     def on_created(self, event):
         src_path = event.src_path.replace("\\", "/")
         print(src_path + " was created")
-        frame_index = os.path.splitext(os.path.basename(src_path))[0].replace("image_", "")
+        frame_index = os.path.splitext(os.path.basename(src_path))[0].split("_")[-1]
 
         # Avoid the case of not finishing generating images
         time.sleep(0.1)
@@ -31,7 +31,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
 
 def watch_image_generation(callback, directory_path):
-    event_handler = ImageGenerationEventHandler([directory_path + "/image_*.jpg"], callback)
+    event_handler = ImageGenerationEventHandler(["*.jpg"], callback)
     observer = Observer()
     observer.schedule(event_handler, directory_path)
     observer.start()

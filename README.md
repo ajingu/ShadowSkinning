@@ -23,5 +23,5 @@ You should install **tf_pose** module according to [instructions](https://github
 
 ### watch_image_generation_then_get_shadow_info.py
 - Assign the directory path you want to watch to `TARGET_DIRECTORY_PATH`.
-- When you create a image which name is `image_*.jpg` under `TARGET_DIRECTORY_PATH`, that image will be analyzed automatically.
+- When you create a image which name is like `2018-11-02-22-49-19_*.jpg` under `TARGET_DIRECTORY_PATH`, that image will be analyzed automatically.
 - The shadow analysis is continued in an endless loop.
