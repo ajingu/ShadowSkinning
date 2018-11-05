@@ -19,4 +19,4 @@ class OSCclient:
         sleep(self.sleep_time)
         self.client.send_message("/vertices", vertices)
         sleep(self.sleep_time)
-        self.client.send_message("/frame_index", frame_index)
+        self.client.send_message("/frame_index", int(frame_index))
