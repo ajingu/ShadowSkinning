@@ -5,7 +5,6 @@ import cv2
 import matplotlib.pyplot as plt
 
 from lib.blob import extract_human_blob
-from lib.binarization import to_binary_image
 from lib.skeleton import SkeletonColors
 
 
@@ -32,7 +31,7 @@ def calculate_nearest_neighbour(contour_vertex_positions, body_part_positions):
 
 def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, body_part_positions):
     human_blob = extract_human_blob(img)
-    black_pixel_positions = find_black_pixel_positions(human_blob)
+    black_pixel_positions = [(x, y) for x in range(img.shape[1]) for y in range(img.shape[0]) if human_blob[y][x] == 0]
     black_pixel_positions.extend(contour_vertex_positions)
     black_pixels_body_part_dict = {position: None for position in set(black_pixel_positions)}
     remaining_pixels_body_part_dict = black_pixels_body_part_dict.copy()
@@ -74,13 +73,3 @@ def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, bo
 
 def calculate_squared_distance(pt1, pt2):
     return (pt1[0] - pt2[0]) ** 2 + (pt1[1] - pt2[1]) ** 2
-
-
-def find_black_pixel_positions(src):
-    binary = to_binary_image(src)
-
-    height, width = src.shape[:2]
-
-    black_pixel_positions = [(x, y) for x in range(width) for y in range(height) if binary[y][x] == 0]
-
-    return black_pixel_positions

@@ -8,7 +8,6 @@ if __name__ == "__main__":
     human_contour = find_human_contour(src)
     draw_contour(dst, human_contour)
 
-    # cv2.imwrite("./images/contour.png", dst)
     cv2.imshow("contour", dst)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
