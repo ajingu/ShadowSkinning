@@ -1,14 +1,19 @@
 import os
+import sys
 import time
 
+from tf_pose.common import read_imgfile
 from watchdog.events import PatternMatchingEventHandler
-from watchdog.observers import Observer
+
+from lib.contour import find_human_contour
+from lib.skeleton import SkeletonTest
+from lib.shadow import Shadow
 
 
 class ImageGenerationEventHandler(PatternMatchingEventHandler):
-    def __init__(self, patterns, callback):
+    def __init__(self, patterns, skeleton_implement):
         super(ImageGenerationEventHandler, self).__init__(patterns=patterns)
-        self.callback = callback
+        self.skeleton_implement = skeleton_implement
 
     def on_created(self, event):
         src_path = event.src_path.replace("\\", "/")
@@ -18,7 +23,29 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         # Avoid the case of not finishing generating images
         time.sleep(0.1)
 
-        self.callback(src_path, frame_index)
+        src = read_imgfile(src_path, None, None)
+
+        if src is None:
+            print(src_path + " is not found.")
+            return
+
+        print("Frame Index:", frame_index)
+
+        human_contour = find_human_contour(src)
+
+        human = self.skeleton_implement.infer_skeleton(src)
+
+        skeleton_test = SkeletonTest(human, human_contour, src.shape)
+        if not skeleton_test.is_reliable():
+            skeleton_test.report()
+            print("This skeleton model is not reliable.")
+            sys.exit(0)
+
+        shadow = Shadow(src.shape, human, human_contour)
+
+        print("The number of body parts:", len(shadow.body_part_positions))
+        print("The number of contour vertices:", len(shadow.contour_vertex_positions))
+        print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
 
     def on_deleted(self, event):
         pass
@@ -28,19 +55,3 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
     def on_moved(self, event):
         pass
-
-
-def watch_image_generation(callback, directory_path):
-    event_handler = ImageGenerationEventHandler(["*.jpg"], callback)
-    observer = Observer()
-    observer.schedule(event_handler, directory_path)
-    observer.start()
-    print("watching image generation...")
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-
-    observer.join()

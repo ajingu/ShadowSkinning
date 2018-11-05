@@ -30,14 +30,12 @@ SkeletonColors = [
 
 
 class SkeletonImplement:
-    def __init__(self, tf_config=None):
-        self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=(368, 368), tf_config=tf_config)
+    def __init__(self, tf_config=None, target_size=(368, 368)):
+        self.estimator = TfPoseEstimator(get_graph_path("mobilenet_thin"), target_size=target_size, tf_config=tf_config)
 
     def infer_skeleton(self, src):
         humans = self.estimator.inference(src, upsample_size=4.0)
-        return humans[0]
-
-    def remove_unused_joints(self, human):
+        human = humans[0]
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():
                 del human.body_parts[unused_index]

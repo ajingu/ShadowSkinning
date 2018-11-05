@@ -11,7 +11,6 @@ if __name__ == '__main__':
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
-    human = skeletonImplement.remove_unused_joints(human)
     dst = skeletonImplement.draw_skeleton(dst, human)
 
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))

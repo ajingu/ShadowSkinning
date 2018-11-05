@@ -17,15 +17,13 @@ if __name__ == '__main__':
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
-    human = skeletonImplement.remove_unused_joints(human)
 
     skeletonTest = SkeletonTest(human, human_contour, src.shape)
-    skeletonTest.report()
     if not skeletonTest.is_reliable():
+        skeletonTest.report()
         print("This skeleton model is not reliable.")
         sys.exit(0)
 
-    # skinning = Skinning(src, humans, human_contour)
     skinning = Skinning(src, human, human_contour, algorithm="nearest_neighbour_within_contour")
 
     # visualization
@@ -33,6 +31,5 @@ if __name__ == '__main__':
         draw_circle(dst, skinning.contour_vertex_positions[i], (255, 0, 0))
         draw_circle(dst, skinning.body_part_positions[skinning.nearest_body_part_indices[i]])
 
-    # cv2.imwrite("./images/nearest.png", dst)
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
     plt.show()
