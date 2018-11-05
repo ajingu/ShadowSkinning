@@ -24,7 +24,6 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         time.sleep(0.1)
 
         src = read_imgfile(src_path, None, None)
-
         if src is None:
             print(src_path + " is not found.")
             return
@@ -32,9 +31,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         print("Frame Index:", frame_index)
 
         human_contour = find_human_contour(src)
-
         human = self.skeleton_implement.infer_skeleton(src)
-
         skeleton_test = SkeletonTest(human, human_contour, src.shape)
         if not skeleton_test.is_reliable():
             skeleton_test.report()
@@ -42,7 +39,6 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             sys.exit(0)
 
         shadow = Shadow(src.shape, human, human_contour)
-
         print("The number of body parts:", len(shadow.body_part_positions))
         print("The number of contour vertices:", len(shadow.contour_vertex_positions))
         print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
