@@ -11,9 +11,10 @@ from lib.shadow import Shadow
 
 
 class ImageGenerationEventHandler(PatternMatchingEventHandler):
-    def __init__(self, patterns, skeleton_implement):
+    def __init__(self, patterns, skeleton_implement, oscClient):
         super(ImageGenerationEventHandler, self).__init__(patterns=patterns)
         self.skeleton_implement = skeleton_implement
+        self.oscClient = oscClient
 
     def on_created(self, event):
         src_path = event.src_path.replace("\\", "/")
@@ -42,6 +43,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         print("The number of body parts:", len(shadow.body_part_positions))
         print("The number of contour vertices:", len(shadow.contour_vertex_positions))
         print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
+        self.oscClient.send(shadow, frame_index)
 
     def on_deleted(self, event):
         pass
