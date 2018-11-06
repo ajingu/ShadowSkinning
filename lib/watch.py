@@ -39,9 +39,9 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             print("This skeleton model is not reliable.")
             sys.exit(0)
 
-        shadow = Shadow(src.shape, human, human_contour)
+        shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
         print("The number of body parts:", len(shadow.body_part_positions))
-        print("The number of contour vertices:", len(shadow.contour_vertex_positions))
+        print("The number of vertices:", len(shadow.vertex_positions))
         print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
         self.oscClient.send(shadow, frame_index)
 

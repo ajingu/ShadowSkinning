@@ -1,4 +1,6 @@
 opencv_python==3.4.3.18
 matplotlib==3.0.0
 numpy==1.15.2
+python-osc==1.7.0
+tensorflow==1.12.0
 watchdog==0.9.0

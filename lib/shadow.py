@@ -4,9 +4,9 @@ from lib.skeleton import SkeletonPart
 
 
 class Shadow:
-    def __init__(self, src_shape, human, human_contour):
+    def __init__(self, src_shape, human, human_contour, arrangement_interval=10):
         self.body_part_positions = []
-        self.contour_vertex_positions = []
+        self.vertex_positions = []
         self.triangle_vertex_indices = []
 
         image_height, image_width = src_shape[:2]
@@ -21,15 +21,43 @@ class Shadow:
             body_part_position = (int(body_part.x * image_width + 0.5), int(body_part.y * image_height + 0.5))
             self.body_part_positions.append(body_part_position)
 
-        # contour_vertex_positions
+        # vertex_positions
         subdivision = cv2.Subdiv2D((0, 0, image_width, image_height))
         for j in range(len(human_contour)):
             contour_point = tuple(human_contour[j][0])
             subdivision.insert(contour_point)
-            self.contour_vertex_positions.append(contour_point)
+            self.vertex_positions.append(contour_point)
+
+        # augment vertices
+        start_x, start_y, width, height = cv2.boundingRect(human_contour)
+
+        end_x = start_x + width
+        end_y = start_y + height
+        x = start_x
+        y = start_y
+
+        while True:
+            y += arrangement_interval
+            if y > end_y:
+                break
+
+            while True:
+                x += arrangement_interval
+                if x > end_x:
+                    x = start_x
+                    break
+
+                point = (x, y)
+                if point in self.vertex_positions:
+                    continue
+                if cv2.pointPolygonTest(human_contour, point, False) < 1:
+                    continue
+
+                subdivision.insert(point)
+                self.vertex_positions.append(point)
 
         # triangle_vertex_indices
-        contour_vertex_indices = dict((coord, index) for index, coord in enumerate(self.contour_vertex_positions))
+        vertex_indices = dict((coord, index) for index, coord in enumerate(self.vertex_positions))
         triangle_list = subdivision.getTriangleList()
         for t in triangle_list:
             pt1 = (t[0], t[1])
@@ -41,7 +69,7 @@ class Shadow:
                 continue
 
             self.triangle_vertex_indices.append([
-                contour_vertex_indices[pt1],
-                contour_vertex_indices[pt2],
-                contour_vertex_indices[pt3]
+                vertex_indices[pt1],
+                vertex_indices[pt2],
+                vertex_indices[pt3]
             ])
