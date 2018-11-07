@@ -1,3 +1,5 @@
+import sys
+
 import cv2
 import matplotlib.pyplot as plt
 
@@ -11,6 +13,10 @@ if __name__ == '__main__':
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
+    if human is None:
+        print("Not a human has detected in the image.")
+        sys.exit(0)
+
     dst = skeletonImplement.draw_skeleton(dst, human)
 
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))

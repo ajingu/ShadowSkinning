@@ -14,9 +14,15 @@ if __name__ == '__main__':
     src = read_imgfile("./images/shadow.jpg", None, None)
     dst = src.copy()
     human_contour = find_human_contour(src)
+    if human_contour is None:
+        print("Not a human contour has detected in the image.")
+        sys.exit(0)
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
+    if human is None:
+        print("Not a human has detected in the image.")
+        sys.exit(0)
 
     skeletonTest = SkeletonTest(human, human_contour, src.shape)
     if not skeletonTest.is_reliable():
