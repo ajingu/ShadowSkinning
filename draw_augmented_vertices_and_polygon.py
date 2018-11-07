@@ -1,3 +1,5 @@
+import sys
+
 import cv2
 
 from lib.contour import find_human_contour
@@ -9,9 +11,15 @@ if __name__ == "__main__":
     src = cv2.imread("./images/shadow.jpg")
 
     human_contour = find_human_contour(src)
+    if human_contour is None:
+        print("Not a human contour has detected in the image.")
+        sys.exit(0)
 
     skeletonImplement = SkeletonImplement()
     human = skeletonImplement.infer_skeleton(src)
+    if human is None:
+        print("Not a human has detected in the image.")
+        sys.exit(0)
 
     shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
 

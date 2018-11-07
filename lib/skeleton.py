@@ -35,6 +35,9 @@ class SkeletonImplement:
 
     def infer_skeleton(self, src):
         humans = self.estimator.inference(src, upsample_size=4.0)
+        if len(humans) == 0:
+            return None
+
         human = humans[0]
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():

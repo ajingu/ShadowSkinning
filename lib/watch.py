@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 
 from tf_pose.common import read_imgfile
@@ -31,22 +30,28 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
         print("Frame Index:", frame_index)
 
-        #millis = int(round(time.time() * 1000))
+        # millis = int(round(time.time() * 1000))
         human_contour = find_human_contour(src)
-        #print("find_human_contour: {}ms".format(int(round(time.time() * 1000)) - millis))
-        #millis = int(round(time.time() * 1000))
+        if human_contour is None:
+            print("Not a human contour has detected in the image.")
+            return
+        # print("find_human_contour: {}ms".format(int(round(time.time() * 1000)) - millis))
+        # millis = int(round(time.time() * 1000))
         human = self.skeleton_implement.infer_skeleton(src)
-        #print("infer_skeleton: {}ms".format(int(round(time.time() * 1000)) - millis))
-        #millis = int(round(time.time() * 1000))
+        if human is None:
+            print("Not a human has detected in the image.")
+            return
+        # print("infer_skeleton: {}ms".format(int(round(time.time() * 1000)) - millis))
+        # millis = int(round(time.time() * 1000))
         skeleton_test = SkeletonTest(human, human_contour, src.shape)
-        #print("SkeletonTest: {}ms".format(int(round(time.time() * 1000)) - millis))
+        # print("SkeletonTest: {}ms".format(int(round(time.time() * 1000)) - millis))
         if not skeleton_test.is_reliable():
             skeleton_test.report()
             print("This skeleton model is not reliable.")
-            sys.exit(0)
-        #millis = int(round(time.time() * 1000))
+            return
+        # millis = int(round(time.time() * 1000))
         shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
-        #print("shadow: {}ms".format(int(round(time.time() * 1000)) - millis))
+        # print("shadow: {}ms".format(int(round(time.time() * 1000)) - millis))
         print("The number of body parts:", len(shadow.body_part_positions))
         print("The number of vertices:", len(shadow.vertex_positions))
         print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
