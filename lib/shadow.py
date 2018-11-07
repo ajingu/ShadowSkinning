@@ -1,3 +1,5 @@
+import time
+
 import cv2
 
 from lib.skeleton import SkeletonPart
@@ -36,6 +38,8 @@ class Shadow:
         x = start_x
         y = start_y
 
+        vertex_positions_set = set(self.vertex_positions)
+
         while True:
             y += arrangement_interval
             if y > end_y:
@@ -48,7 +52,7 @@ class Shadow:
                     break
 
                 point = (x, y)
-                if point in self.vertex_positions:
+                if point in vertex_positions_set:
                     continue
                 if cv2.pointPolygonTest(human_contour, point, False) < 1:
                     continue
