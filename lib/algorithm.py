@@ -31,6 +31,10 @@ def calculate_nearest_neighbour(contour_vertex_positions, body_part_positions):
 
 def calculate_nearest_neighbour_within_contour(img, contour_vertex_positions, body_part_positions):
     human_blob = extract_human_blob(img)
+    if human_blob is None:
+        print("Human blob is not found in this image.")
+        sys.exit(0)
+
     black_pixel_positions = [(x, y) for x in range(img.shape[1]) for y in range(img.shape[0]) if human_blob[y][x] == 0]
     black_pixel_positions.extend(contour_vertex_positions)
     black_pixels_body_part_dict = {position: None for position in set(black_pixel_positions)}

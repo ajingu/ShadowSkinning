@@ -5,6 +5,9 @@ from lib.blob import extract_human_blob
 
 def find_human_contour(src):
     human_blob = extract_human_blob(src)
+    if human_blob is None:
+        return None
+
     _, contours, hierarchy = cv2.findContours(human_blob, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 
     max_area = 0
