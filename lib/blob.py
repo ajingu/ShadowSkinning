@@ -10,6 +10,7 @@ def extract_human_blob(src):
     number_of_labels, lab = cv2.connectedComponents(binary_inv)
 
     if number_of_labels < 2:
+        print("The number of labels is less than 2.")
         return None
 
     hist, _ = np.histogram(lab.flatten(), bins=number_of_labels - 1, range=(1, number_of_labels - 1))
