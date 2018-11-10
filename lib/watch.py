@@ -30,31 +30,36 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
         print("Frame Index:", frame_index)
 
-        # millis = int(round(time.time() * 1000))
+        # firstmillis = int(round(time.perf_counter() * 1000))
         human_contour = find_human_contour(src)
         if human_contour is None:
             os.remove(src_path)
             print("Not a human contour has detected in the image.")
             return
-        # print("find_human_contour: {}ms".format(int(round(time.time() * 1000)) - millis))
-        # millis = int(round(time.time() * 1000))
+        # contourmillis = int(round(time.perf_counter() * 1000))
+        # print("find_human_contour: {}ms".format(contourmillis - firstmillis))
         human = self.skeleton_implement.infer_skeleton(src)
         if human is None:
             os.remove(src_path)
             print("Not a human has detected in the image.")
             return
-        # print("infer_skeleton: {}ms".format(int(round(time.time() * 1000)) - millis))
-        # millis = int(round(time.time() * 1000))
+
+        # skeletonmillis = int(round(time.perf_counter() * 1000))
+        # print("infer_skeleton: {}ms".format(skeletonmillis-contourmillis))
+
         skeleton_test = SkeletonTest(human, human_contour, src.shape)
-        # print("SkeletonTest: {}ms".format(int(round(time.time() * 1000)) - millis))
         if not skeleton_test.is_reliable():
             skeleton_test.report()
             os.remove(src_path)
             print("This skeleton model is not reliable.")
             return
-        # millis = int(round(time.time() * 1000))
+        # skeletontestmillis = int(round(time.perf_counter() * 1000))
+        # print("skeleton_test: {}ms".format(skeletontestmillis - skeletonmillis))
+
         shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
-        # print("shadow: {}ms".format(int(round(time.time() * 1000)) - millis))
+        # shadowmillis = int(round(time.perf_counter() * 1000))
+        # print("shadow: {}ms".format(shadowmillis - skeletontestmillis))
+
         print("The number of body parts:", len(shadow.body_part_positions))
         print("The number of vertices:", len(shadow.vertex_positions))
         print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
