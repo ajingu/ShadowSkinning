@@ -1,4 +1,7 @@
+import time
+
 import cv2
+import numpy as np
 
 from lib.skeleton import SkeletonPart
 
@@ -6,11 +9,11 @@ from lib.skeleton import SkeletonPart
 class Shadow:
     def __init__(self, src_shape, human, human_contour, arrangement_interval=10):
         self.body_part_positions = []
-        self.vertex_positions = []
         self.triangle_vertex_indices = []
 
         image_height, image_width = src_shape[:2]
 
+        firstmillis = int(round(time.time() * 1000))
         # body_part_positions
         for i in range(SkeletonPart.LAnkle.value + 1):
             if i not in human.body_parts.keys():
@@ -21,12 +24,16 @@ class Shadow:
             body_part_position = (int(body_part.x * image_width + 0.5), int(body_part.y * image_height + 0.5))
             self.body_part_positions.append(body_part_position)
 
+        bodymillis = int(round(time.time() * 1000))
+        print("body_part_positions: {}ms".format(bodymillis - firstmillis))
+
         # vertex_positions
         subdivision = cv2.Subdiv2D((0, 0, image_width, image_height))
-        for j in range(len(human_contour)):
-            contour_point = tuple(human_contour[j][0])
-            subdivision.insert(contour_point)
-            self.vertex_positions.append(contour_point)
+        subdivision.insert(human_contour)
+        self.vertex_positions = [tuple(contour_list[0]) for contour_list in human_contour]
+
+        vertexmillis = int(round(time.time() * 1000))
+        print("vertex_positions: {}ms".format(vertexmillis - bodymillis))
 
         # augment vertices
         start_x, start_y, width, height = cv2.boundingRect(human_contour)
@@ -58,6 +65,9 @@ class Shadow:
                 subdivision.insert(point)
                 self.vertex_positions.append(point)
 
+        augmentationmillis = int(round(time.time() * 1000))
+        print("augmentation: {}ms".format(augmentationmillis - vertexmillis))
+
         # triangle_vertex_indices
         vertex_indices = dict((coord, index) for index, coord in enumerate(self.vertex_positions))
         triangle_list = subdivision.getTriangleList()
@@ -75,3 +85,6 @@ class Shadow:
                 vertex_indices[pt2],
                 vertex_indices[pt3]
             ])
+
+        trianglemillis = int(round(time.time() * 1000))
+        print("triangle: {}ms".format(trianglemillis - augmentationmillis))
