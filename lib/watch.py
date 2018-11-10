@@ -11,10 +11,11 @@ from lib.shadow import Shadow
 
 
 class ImageGenerationEventHandler(PatternMatchingEventHandler):
-    def __init__(self, patterns, skeleton_implement, oscClient):
+    def __init__(self, patterns, skeleton_implement, oscClient, arrangement_interval=10):
         super(ImageGenerationEventHandler, self).__init__(patterns=patterns)
         self.skeleton_implement = skeleton_implement
         self.oscClient = oscClient
+        self.arrangement_interval = arrangement_interval
 
     def on_created(self, event):
         try:
@@ -58,7 +59,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             # skeletontestmillis = int(round(time.perf_counter() * 1000))
             # print("skeleton_test: {}ms".format(skeletontestmillis - skeletonmillis))
 
-            shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
+            shadow = Shadow(src.shape, human, human_contour, self.arrangement_interval)
             # shadowmillis = int(round(time.perf_counter() * 1000))
             # print("shadow: {}ms".format(shadowmillis - skeletontestmillis))
 

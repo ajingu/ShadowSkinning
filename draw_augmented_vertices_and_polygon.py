@@ -21,7 +21,7 @@ if __name__ == "__main__":
         print("Not a human has detected in the image.")
         sys.exit(0)
 
-    shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
+    shadow = Shadow(src.shape, human, human_contour, 10)
 
     polygons_image = src.copy()
     for pt1_index, pt2_index, pt3_index in shadow.triangle_vertex_indices:
