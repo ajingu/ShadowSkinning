@@ -33,12 +33,14 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         # millis = int(round(time.time() * 1000))
         human_contour = find_human_contour(src)
         if human_contour is None:
+            os.remove(src_path)
             print("Not a human contour has detected in the image.")
             return
         # print("find_human_contour: {}ms".format(int(round(time.time() * 1000)) - millis))
         # millis = int(round(time.time() * 1000))
         human = self.skeleton_implement.infer_skeleton(src)
         if human is None:
+            os.remove(src_path)
             print("Not a human has detected in the image.")
             return
         # print("infer_skeleton: {}ms".format(int(round(time.time() * 1000)) - millis))
@@ -47,6 +49,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
         # print("SkeletonTest: {}ms".format(int(round(time.time() * 1000)) - millis))
         if not skeleton_test.is_reliable():
             skeleton_test.report()
+            os.remove(src_path)
             print("This skeleton model is not reliable.")
             return
         # millis = int(round(time.time() * 1000))
