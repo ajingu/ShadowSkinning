@@ -3,7 +3,7 @@ import time
 import cv2
 import numpy as np
 
-from lib.skeleton import SkeletonPart
+from lib.skeleton import NUMBER_OF_BODY_PARTS
 
 
 class Shadow:
@@ -14,7 +14,7 @@ class Shadow:
 
         # firstmillis = int(round(time.perf_counter() * 1000))
         # body_part_positions
-        for i in range(SkeletonPart.LAnkle.value + 1):
+        for i in range(NUMBER_OF_BODY_PARTS):
             if i not in human.body_parts.keys():
                 self.body_part_positions.append((0, 0))
                 continue
