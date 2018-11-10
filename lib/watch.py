@@ -30,19 +30,19 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
         print("Frame Index:", frame_index)
 
-        firstmillis = int(round(time.time() * 1000))
+        firstmillis = int(round(time.perf_counter() * 1000))
         human_contour = find_human_contour(src)
         if human_contour is None:
             print("Not a human contour has detected in the image.")
             return
-        contourmillis = int(round(time.time() * 1000))
+        contourmillis = int(round(time.perf_counter() * 1000))
         print("find_human_contour: {}ms".format(contourmillis - firstmillis))
         human = self.skeleton_implement.infer_skeleton(src)
         if human is None:
             print("Not a human has detected in the image.")
             return
 
-        skeletonmillis = int(round(time.time() * 1000))
+        skeletonmillis = int(round(time.perf_counter() * 1000))
         print("infer_skeleton: {}ms".format(skeletonmillis-contourmillis))
 
         skeleton_test = SkeletonTest(human, human_contour, src.shape)
@@ -50,11 +50,11 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             skeleton_test.report()
             print("This skeleton model is not reliable.")
             return
-        skeletontestmillis = int(round(time.time() * 1000))
+        skeletontestmillis = int(round(time.perf_counter() * 1000))
         print("skeleton_test: {}ms".format(skeletontestmillis - skeletonmillis))
 
         shadow = Shadow(src.shape, human, human_contour, arrangement_interval=10)
-        shadowmillis = int(round(time.time() * 1000))
+        shadowmillis = int(round(time.perf_counter() * 1000))
         print("shadow: {}ms".format(shadowmillis - skeletontestmillis))
 
         print("The number of body parts:", len(shadow.body_part_positions))

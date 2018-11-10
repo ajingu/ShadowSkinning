@@ -12,7 +12,7 @@ class Shadow:
 
         image_height, image_width = src_shape[:2]
 
-        firstmillis = int(round(time.time() * 1000))
+        firstmillis = int(round(time.perf_counter() * 1000))
         # body_part_positions
         for i in range(SkeletonPart.LAnkle.value + 1):
             if i not in human.body_parts.keys():
@@ -23,7 +23,7 @@ class Shadow:
             body_part_position = (int(body_part.x * image_width + 0.5), int(body_part.y * image_height + 0.5))
             self.body_part_positions.append(body_part_position)
 
-        bodymillis = int(round(time.time() * 1000))
+        bodymillis = int(round(time.perf_counter() * 1000))
         print("body_part_positions: {}ms".format(bodymillis - firstmillis))
 
         # vertex_positions
@@ -33,7 +33,7 @@ class Shadow:
         subdivision.insert(human_contour)
         self.vertex_positions = [tuple(contour_list[0]) for contour_list in human_contour]
 
-        vertexmillis = int(round(time.time() * 1000))
+        vertexmillis = int(round(time.perf_counter() * 1000))
         print("vertex_positions: {}ms".format(vertexmillis - bodymillis))
 
         # augment vertices
@@ -64,7 +64,7 @@ class Shadow:
                 subdivision.insert(point)
                 self.vertex_positions.append(point)
 
-        augmentationmillis = int(round(time.time() * 1000))
+        augmentationmillis = int(round(time.perf_counter() * 1000))
         print("augmentation: {}ms".format(augmentationmillis - vertexmillis))
 
         # triangle_vertex_indices
@@ -79,5 +79,5 @@ class Shadow:
             if cv2.pointPolygonTest(human_contour, tuple(triangle_center), False) == 1
         ]
 
-        trianglemillis = int(round(time.time() * 1000))
+        trianglemillis = int(round(time.perf_counter() * 1000))
         print("triangle: {}ms".format(trianglemillis - augmentationmillis))
