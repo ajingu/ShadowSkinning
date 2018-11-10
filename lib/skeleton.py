@@ -1,6 +1,7 @@
 from enum import Enum
 
 import cv2
+import numpy as np
 
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
@@ -28,6 +29,8 @@ SkeletonColors = [
     [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255]
 ]
 
+NUMBER_OF_BODY_PARTS = SkeletonPart.LAnkle.value + 1
+
 
 class SkeletonImplement:
     def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None):
@@ -51,30 +54,20 @@ class SkeletonImplement:
 
 class SkeletonTest:
     def __init__(self, human, human_contour, src_shape):
-        self.isAcquired = []  # Whether or not each joint is acquired
-        self.probability = []  # Probability of each joint
-        self.isWithinContour = []  # Whether or not each joint is within the contour
-
         src_height, src_width = src_shape[:2]
+        body_part_indices = list(human.body_parts.keys())
 
-        body_part_positions = []
+        self.isAcquired = np.zeros(NUMBER_OF_BODY_PARTS)
+        self.isAcquired[body_part_indices] = 1
 
-        for joint_index in range(SkeletonPart.LAnkle.value + 1):
-            if joint_index in human.body_parts.keys():
-                self.isAcquired.append(True)
-                body_part = human.body_parts[joint_index]
-                body_part_position = (int(body_part.x * src_width + 0.5), int(body_part.y * src_height + 0.5))
-                body_part_positions.append(body_part_position)
-                self.probability.append(body_part.score)
-            else:
-                self.isAcquired.append(False)
-                body_part_positions.append(None)
-                self.probability.append(0.0)
+        self.probability = [human.body_parts[joint_index].score for joint_index in body_part_indices]
 
-        self.isWithinContour = [body_part_position is not None
-                                and cv2.pointPolygonTest(human_contour, body_part_position, False) > -1
-                                for i, body_part_position in enumerate(body_part_positions)
-                                if i not in [10, 13]]
+        self.isWithinContour = [cv2.pointPolygonTest(human_contour,
+                                                     (int(human.body_parts[joint_index].x * src_width + 0.5),
+                                                      int(human.body_parts[joint_index].y * src_height + 0.5)),
+                                                     False) == 1
+                                for joint_index in body_part_indices
+                                if joint_index not in [10, 13]]
 
     # Change conditions freely
     def is_reliable(self):
