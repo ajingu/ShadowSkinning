@@ -73,7 +73,8 @@ class SkeletonTest:
 
         self.isWithinContour = [body_part_position is not None
                                 and cv2.pointPolygonTest(human_contour, body_part_position, False) > -1
-                                for body_part_position in body_part_positions]
+                                for i, body_part_position in enumerate(body_part_positions)
+                                if i not in [10, 13]]
 
     # Change conditions freely
     def is_reliable(self):
