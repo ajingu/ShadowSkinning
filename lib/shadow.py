@@ -12,7 +12,7 @@ class Shadow:
 
         image_height, image_width = src_shape[:2]
 
-        firstmillis = int(round(time.perf_counter() * 1000))
+        # firstmillis = int(round(time.perf_counter() * 1000))
         # body_part_positions
         for i in range(SkeletonPart.LAnkle.value + 1):
             if i not in human.body_parts.keys():
@@ -23,8 +23,8 @@ class Shadow:
             body_part_position = (int(body_part.x * image_width + 0.5), int(body_part.y * image_height + 0.5))
             self.body_part_positions.append(body_part_position)
 
-        bodymillis = int(round(time.perf_counter() * 1000))
-        print("body_part_positions: {}ms".format(bodymillis - firstmillis))
+        # bodymillis = int(round(time.perf_counter() * 1000))
+        # print("body_part_positions: {}ms".format(bodymillis - firstmillis))
 
         # vertex_positions
         start_x, start_y, width, height = cv2.boundingRect(human_contour)
@@ -33,8 +33,8 @@ class Shadow:
         subdivision.insert(human_contour)
         self.vertex_positions = [tuple(contour_list[0]) for contour_list in human_contour]
 
-        vertexmillis = int(round(time.perf_counter() * 1000))
-        print("vertex_positions: {}ms".format(vertexmillis - bodymillis))
+        # vertexmillis = int(round(time.perf_counter() * 1000))
+        # print("vertex_positions: {}ms".format(vertexmillis - bodymillis))
 
         # augment vertices
         end_x = start_x + width
@@ -64,8 +64,8 @@ class Shadow:
                 subdivision.insert(point)
                 self.vertex_positions.append(point)
 
-        augmentationmillis = int(round(time.perf_counter() * 1000))
-        print("augmentation: {}ms".format(augmentationmillis - vertexmillis))
+        # augmentationmillis = int(round(time.perf_counter() * 1000))
+        # print("augmentation: {}ms".format(augmentationmillis - vertexmillis))
 
         # triangle_vertex_indices
         vertex_indices = dict((coord, index) for index, coord in enumerate(self.vertex_positions))
@@ -79,5 +79,5 @@ class Shadow:
             if cv2.pointPolygonTest(human_contour, tuple(triangle_center), False) == 1
         ]
 
-        trianglemillis = int(round(time.perf_counter() * 1000))
-        print("triangle: {}ms".format(trianglemillis - augmentationmillis))
+        # trianglemillis = int(round(time.perf_counter() * 1000))
+        # print("triangle: {}ms".format(trianglemillis - augmentationmillis))
