@@ -27,7 +27,9 @@ class Shadow:
         print("body_part_positions: {}ms".format(bodymillis - firstmillis))
 
         # vertex_positions
-        subdivision = cv2.Subdiv2D((0, 0, image_width, image_height))
+        start_x, start_y, width, height = cv2.boundingRect(human_contour)
+
+        subdivision = cv2.Subdiv2D((start_x, start_y, width, height))
         subdivision.insert(human_contour)
         self.vertex_positions = [tuple(contour_list[0]) for contour_list in human_contour]
 
@@ -35,8 +37,6 @@ class Shadow:
         print("vertex_positions: {}ms".format(vertexmillis - bodymillis))
 
         # augment vertices
-        start_x, start_y, width, height = cv2.boundingRect(human_contour)
-
         end_x = start_x + width
         end_y = start_y + height
         x = start_x
@@ -76,7 +76,7 @@ class Shadow:
              vertex_indices[tuple(triangle_list[i][1])],
              vertex_indices[tuple(triangle_list[i][2])]]
             for i, triangle_center in enumerate(triangle_centers)
-            if cv2.pointPolygonTest(human_contour, tuple(triangle_center), False) > 0
+            if cv2.pointPolygonTest(human_contour, tuple(triangle_center), False) == 1
         ]
 
         trianglemillis = int(round(time.time() * 1000))
