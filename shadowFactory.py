@@ -17,6 +17,8 @@ ip = "127.0.0.1"
 port = 5005
 sleep_time = 0.1
 
+arrangement_interval = 10
+
 if __name__ == '__main__':
     gpuConfig = tf.ConfigProto(
         gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction),
@@ -25,7 +27,7 @@ if __name__ == '__main__':
 
     osc_client = OSCclient(ip, port, sleep_time)
 
-    event_handler = ImageGenerationEventHandler(["*.jpg"], skeleton_implement, osc_client)
+    event_handler = ImageGenerationEventHandler(["*.jpg"], skeleton_implement, osc_client, arrangement_interval)
     observer = Observer()
     observer.schedule(event_handler, TARGET_DIRECTORY_PATH)
     observer.start()

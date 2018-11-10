@@ -7,7 +7,7 @@ from lib.skeleton import NUMBER_OF_BODY_PARTS
 
 
 class Shadow:
-    def __init__(self, src_shape, human, human_contour, arrangement_interval=10):
+    def __init__(self, src_shape, human, human_contour, arrangement_interval):
         self.body_part_positions = []
 
         image_height, image_width = src_shape[:2]
