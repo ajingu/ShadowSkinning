@@ -9,7 +9,6 @@ from lib.skeleton import SkeletonPart
 class Shadow:
     def __init__(self, src_shape, human, human_contour, arrangement_interval=10):
         self.body_part_positions = []
-        self.triangle_vertex_indices = []
 
         image_height, image_width = src_shape[:2]
 
@@ -70,21 +69,15 @@ class Shadow:
 
         # triangle_vertex_indices
         vertex_indices = dict((coord, index) for index, coord in enumerate(self.vertex_positions))
-        triangle_list = subdivision.getTriangleList()
-        for t in triangle_list:
-            pt1 = (t[0], t[1])
-            pt2 = (t[2], t[3])
-            pt3 = (t[4], t[5])
-
-            triangle_center = (int((t[0] + t[2] + t[4]) / 3), int((t[1] + t[3] + t[5]) / 3))
-            if cv2.pointPolygonTest(human_contour, triangle_center, False) < 1:
-                continue
-
-            self.triangle_vertex_indices.append([
-                vertex_indices[pt1],
-                vertex_indices[pt2],
-                vertex_indices[pt3]
-            ])
+        triangle_list = subdivision.getTriangleList().reshape(-1, 3, 2)
+        triangle_centers = np.mean(triangle_list, axis=1, dtype="int")
+        self.triangle_vertex_indices = [
+            [vertex_indices[tuple(triangle_list[i][0])],
+             vertex_indices[tuple(triangle_list[i][1])],
+             vertex_indices[tuple(triangle_list[i][2])]]
+            for i, triangle_center in enumerate(triangle_centers)
+            if cv2.pointPolygonTest(human_contour, tuple(triangle_center), False) > 0
+        ]
 
         trianglemillis = int(round(time.time() * 1000))
         print("triangle: {}ms".format(trianglemillis - augmentationmillis))
