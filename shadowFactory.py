@@ -16,7 +16,7 @@ ip = "127.0.0.1"
 port = 5005
 sleep_time = 0.1
 
-arrangement_interval = 10
+arrangement_interval = 40
 
 if __name__ == '__main__':
     gpuConfig = tf.ConfigProto(
