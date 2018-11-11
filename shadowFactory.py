@@ -6,10 +6,9 @@ from lib.skeleton import SkeletonImplement
 from lib.watch import ImageGenerationEventHandler
 from lib.OSCclient import OSCclient
 
-
 TARGET_DIRECTORY_PATH = "./images"
 
-model = "mobilenet_thin"
+model = "cmu"
 gpu_memory_fraction = 0.5
 target_size = (640, 512)
 
@@ -23,6 +22,7 @@ if __name__ == '__main__':
     gpuConfig = tf.ConfigProto(
         gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction),
         device_count={'GPU': 1})
+
     skeleton_implement = SkeletonImplement(model, target_size, gpuConfig)
 
     osc_client = OSCclient(ip, port, sleep_time)
