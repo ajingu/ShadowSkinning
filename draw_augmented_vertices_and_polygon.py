@@ -8,14 +8,15 @@ from lib.shadow import Shadow
 from lib.skeleton import SkeletonImplement
 
 if __name__ == "__main__":
-    src = cv2.imread("./images/shadow.jpg")
+    src = cv2.imread("./images/shadow_portrait_orientation.jpg")
+    src = src.transpose(1, 0, 2)[::-1]
 
     human_contour = find_human_contour(src)
     if human_contour is None:
         print("Not a human contour has detected in the image.")
         sys.exit(0)
 
-    skeletonImplement = SkeletonImplement()
+    skeletonImplement = SkeletonImplement(model="cmu", target_size=(640, 512))
     human = skeletonImplement.infer_skeleton(src)
     if human is None:
         print("Not a human has detected in the image.")
@@ -24,6 +25,8 @@ if __name__ == "__main__":
     shadow = Shadow(src.shape, human, human_contour, 10)
 
     polygons_image = src.copy()
+    skeletonImplement.draw_skeleton(polygons_image, human)
+
     for pt1_index, pt2_index, pt3_index in shadow.triangle_vertex_indices:
         draw_triangle(polygons_image,
                       shadow.vertex_positions[pt1_index],

@@ -33,6 +33,9 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
 
             print("Frame Index:", frame_index)
 
+            # rotation
+            src = src.transpose(1, 0, 2)[::-1]
+
             # firstmillis = int(round(time.perf_counter() * 1000))
             human_contour = find_human_contour(src)
             if human_contour is None:
