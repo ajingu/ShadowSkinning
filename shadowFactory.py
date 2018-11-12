@@ -18,12 +18,14 @@ sleep_time = 0.1
 
 arrangement_interval = 30
 
+adjust_nose_position = True
+
 if __name__ == '__main__':
     gpuConfig = tf.ConfigProto(
         gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction),
         device_count={'GPU': 1})
 
-    skeleton_implement = SkeletonImplement(model, target_size, gpuConfig)
+    skeleton_implement = SkeletonImplement(model, target_size, gpuConfig, adjust_nose_position)
 
     osc_client = OSCclient(ip, port, sleep_time)
 
