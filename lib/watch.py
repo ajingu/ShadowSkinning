@@ -70,6 +70,23 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             print("The number of vertices:", len(shadow.vertex_positions))
             print("The number of triangle vertices:", len(shadow.triangle_vertex_indices))
             self.oscClient.send(shadow, frame_index)
+
+            polygons_image = src.copy()
+            self.skeleton_implement.draw_skeleton(polygons_image, human)
+
+            import cv2
+            from lib.draw import draw_triangle
+
+            for pt1_index, pt2_index, pt3_index in shadow.triangle_vertex_indices:
+                draw_triangle(polygons_image,
+                              shadow.vertex_positions[pt1_index],
+                              shadow.vertex_positions[pt2_index],
+                              shadow.vertex_positions[pt3_index])
+
+            cv2.imwrite("./watch_test_images/adjust_skeleton2.jpg", polygons_image)
+            cv2.imshow("augmented_polygons", polygons_image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
         except Exception:
             traceback.print_exc()
             pass

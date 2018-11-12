@@ -19,5 +19,6 @@ if __name__ == '__main__':
 
     dst = skeletonImplement.draw_skeleton(dst, human)
 
+    cv2.imwrite("./watch_test_images/adjust_skeleton.jpg", dst)
     plt.imshow(cv2.cvtColor(dst, cv2.COLOR_BGR2RGB))
     plt.show()

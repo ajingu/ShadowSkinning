@@ -33,6 +33,7 @@ if __name__ == "__main__":
                       shadow.vertex_positions[pt2_index],
                       shadow.vertex_positions[pt3_index])
 
+    cv2.imwrite("./watch_test_images/adjust_skeleton2.jpg", polygons_image)
     cv2.imshow("augmented_polygons", polygons_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
