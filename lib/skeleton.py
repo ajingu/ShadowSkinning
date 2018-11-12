@@ -33,8 +33,9 @@ NUMBER_OF_BODY_PARTS = SkeletonPart.LAnkle.value + 1
 
 
 class SkeletonImplement:
-    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None):
+    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None, adjust_nose_position=True):
         self.estimator = TfPoseEstimator(get_graph_path(model), target_size=target_size, tf_config=tf_config)
+        self.adjust_nose_position = adjust_nose_position
 
     def infer_skeleton(self, src):
         humans = self.estimator.inference(src, upsample_size=4.0)
@@ -45,6 +46,11 @@ class SkeletonImplement:
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():
                 del human.body_parts[unused_index]
+
+        if self.adjust_nose_position:
+            nose, neck = human.body_parts[0], human.body_parts[1]
+            if abs(nose.y - neck.y) / (abs(nose.x - neck.x) + 1e-4) < 5:
+                human.body_parts[0].x = neck.x
 
         return human
 
