@@ -8,7 +8,7 @@ from lib.shadow import Shadow
 from lib.skeleton import SkeletonImplement
 
 if __name__ == "__main__":
-    src = cv2.imread("./watch_test_images/2018-11-11-00-09-33_480.jpg")
+    src = cv2.imread("./watch_test_images/2018-11-13-15-32-30_1800.jpg")
     src = src.transpose(1, 0, 2)[::-1]
 
     human_contour = find_human_contour(src)

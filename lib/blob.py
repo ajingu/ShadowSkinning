@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
 from lib.binarization import to_binary_inv_image
 
@@ -9,10 +8,6 @@ from lib.binarization import to_binary_inv_image
 def extract_human_blob(src):
     binary = to_binary_inv_image(src)
     binary[-1, :] = 0
-
-    #plt.gray()
-    #plt.imshow(binary)
-    #plt.show()
 
     number_of_labels, lab, data, _ = cv2.connectedComponentsWithStats(binary, connectivity=4)
 
