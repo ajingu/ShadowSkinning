@@ -21,6 +21,8 @@ arrangement_interval = 30
 
 adjust_nose_position = False
 
+binary_thresh = 240
+
 if __name__ == '__main__':
     if len(sys.argv) > 0:
         target_directory_path = sys.argv[1]
@@ -33,7 +35,8 @@ if __name__ == '__main__':
 
     osc_client = OSCclient(ip, port, sleep_time)
 
-    event_handler = ImageGenerationEventHandler(["*.jpg"], skeleton_implement, osc_client, arrangement_interval)
+    event_handler = ImageGenerationEventHandler(["*.jpg"], skeleton_implement, osc_client, arrangement_interval,
+                                                binary_thresh)
     observer = Observer()
     observer.schedule(event_handler, target_directory_path)
     observer.start()
