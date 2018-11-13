@@ -3,7 +3,7 @@ from enum import Enum
 import cv2
 import numpy as np
 
-from tf_pose.estimator import TfPoseEstimator
+from tf_pose.estimator import TfPoseEstimator, BodyPart
 from tf_pose.networks import get_graph_path
 
 
@@ -50,8 +50,12 @@ class SkeletonImplement:
 
         if 16 in human.body_parts and 17 in human.body_parts:
             right_ear, left_ear = human.body_parts[16], human.body_parts[17]
-            human.body_parts[0].x = (right_ear.x + left_ear.x) / 2
-            human.body_parts[0].y = (right_ear.y + left_ear.y) / 2
+            nose_x, nose_y = (right_ear.x + left_ear.x) / 2, (right_ear.y + left_ear.y) / 2
+            if 0 in human.body_parts:
+                human.body_parts[0].x = nose_x
+                human.body_parts[0].y = nose_y
+            else:
+                human.body_parts[0] = BodyPart("0-0", 0, nose_x, nose_y, 0.5)
 
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():
