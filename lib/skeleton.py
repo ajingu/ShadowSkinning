@@ -22,6 +22,10 @@ class SkeletonPart(Enum):
     LHip = 11
     LKnee = 12
     LAnkle = 13
+    REye = 14
+    LEye = 15
+    REar = 16
+    LEar = 17
 
 
 SkeletonColors = [
@@ -29,7 +33,7 @@ SkeletonColors = [
     [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255]
 ]
 
-NUMBER_OF_BODY_PARTS = SkeletonPart.LAnkle.value + 1
+NUMBER_OF_BODY_PARTS = 14
 
 
 class SkeletonImplement:
@@ -43,6 +47,12 @@ class SkeletonImplement:
             return None
 
         human = humans[0]
+
+        if 16 in human.body_parts and 17 in human.body_parts:
+            right_ear, left_ear = human.body_parts[16], human.body_parts[17]
+            human.body_parts[0].x = (right_ear.x + left_ear.x) / 2
+            human.body_parts[0].y = (right_ear.y + left_ear.y) / 2
+
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():
                 del human.body_parts[unused_index]

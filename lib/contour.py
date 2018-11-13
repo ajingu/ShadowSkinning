@@ -3,7 +3,7 @@ import cv2
 from lib.blob import extract_human_blob
 
 
-def find_human_contour(src, binary_thresh):
+def find_human_contour(src, binary_thresh=240):
     human_blob = extract_human_blob(src, binary_thresh)
     if human_blob is None:
         return None
