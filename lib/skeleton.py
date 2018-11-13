@@ -33,7 +33,7 @@ NUMBER_OF_BODY_PARTS = SkeletonPart.LAnkle.value + 1
 
 
 class SkeletonImplement:
-    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None, adjust_nose_position=True):
+    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None, adjust_nose_position=False):
         self.estimator = TfPoseEstimator(get_graph_path(model), target_size=target_size, tf_config=tf_config)
         self.adjust_nose_position = adjust_nose_position
 
@@ -72,8 +72,7 @@ class SkeletonTest:
                                                      (int(human.body_parts[joint_index].x * src_width + 0.5),
                                                       int(human.body_parts[joint_index].y * src_height + 0.5)),
                                                      False) == 1
-                                for joint_index in body_part_indices
-                                if joint_index not in [10, 13]]
+                                for joint_index in body_part_indices]
 
     # Change conditions freely
     def is_reliable(self):
