@@ -3,7 +3,7 @@ from enum import Enum
 import cv2
 import numpy as np
 
-from tf_pose.estimator import TfPoseEstimator
+from tf_pose.estimator import TfPoseEstimator, BodyPart
 from tf_pose.networks import get_graph_path
 
 
@@ -22,6 +22,10 @@ class SkeletonPart(Enum):
     LHip = 11
     LKnee = 12
     LAnkle = 13
+    REye = 14
+    LEye = 15
+    REar = 16
+    LEar = 17
 
 
 SkeletonColors = [
@@ -29,11 +33,11 @@ SkeletonColors = [
     [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255]
 ]
 
-NUMBER_OF_BODY_PARTS = SkeletonPart.LAnkle.value + 1
+NUMBER_OF_BODY_PARTS = 14
 
 
 class SkeletonImplement:
-    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None, adjust_nose_position=True):
+    def __init__(self, model="mobilenet_thin", target_size=(368, 368), tf_config=None, adjust_nose_position=False):
         self.estimator = TfPoseEstimator(get_graph_path(model), target_size=target_size, tf_config=tf_config)
         self.adjust_nose_position = adjust_nose_position
 
@@ -43,6 +47,16 @@ class SkeletonImplement:
             return None
 
         human = humans[0]
+
+        if 16 in human.body_parts and 17 in human.body_parts:
+            right_ear, left_ear = human.body_parts[16], human.body_parts[17]
+            nose_x, nose_y = (right_ear.x + left_ear.x) / 2, (right_ear.y + left_ear.y) / 2
+            if 0 in human.body_parts:
+                human.body_parts[0].x = nose_x
+                human.body_parts[0].y = nose_y
+            else:
+                human.body_parts[0] = BodyPart("0-0", 0, nose_x, nose_y, 0.5)
+
         for unused_index in [14, 15, 16, 17, 18]:
             if unused_index in human.body_parts.keys():
                 del human.body_parts[unused_index]
@@ -72,8 +86,7 @@ class SkeletonTest:
                                                      (int(human.body_parts[joint_index].x * src_width + 0.5),
                                                       int(human.body_parts[joint_index].y * src_height + 0.5)),
                                                      False) == 1
-                                for joint_index in body_part_indices
-                                if joint_index not in [10, 13]]
+                                for joint_index in body_part_indices]
 
     # Change conditions freely
     def is_reliable(self):

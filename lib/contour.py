@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 MAXIMUM_INNER_BLOB_AREA = 30
 
 
-def find_human_contour(src):
-    binary_inv = to_binary_inv_image(src)
+def find_human_contour(src, binary_thresh=240):
+    binary_inv = to_binary_inv_image(src, binary_thresh)
     binary_inv[-1, :] = 0
     # plt.gray()
     # plt.title("blob")
