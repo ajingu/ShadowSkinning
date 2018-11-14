@@ -11,12 +11,14 @@ from lib.shadow import Shadow
 
 
 class ImageGenerationEventHandler(PatternMatchingEventHandler):
-    def __init__(self, patterns, skeleton_implement, oscClient, arrangement_interval, binary_thresh):
+    def __init__(self, patterns, skeleton_implement, oscClient, arrangement_interval, binary_thresh,
+                 maximum_inner_blob_area):
         super(ImageGenerationEventHandler, self).__init__(patterns=patterns)
         self.skeleton_implement = skeleton_implement
         self.oscClient = oscClient
         self.arrangement_interval = arrangement_interval
         self.binary_thresh = binary_thresh
+        self.maximum_inner_blob_area = maximum_inner_blob_area
 
     def on_created(self, event):
         try:
@@ -38,7 +40,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             src = src.transpose(1, 0, 2)[::-1]
 
             # firstmillis = int(round(time.perf_counter() * 1000))
-            human_contour = find_human_contour(src, self.binary_thresh)
+            human_contour = find_human_contour(src, self.binary_thresh, self.maximum_inner_blob_area)
             if human_contour is None:
                 os.remove(src_path)
                 print("Not a human contour has detected in the image.")
