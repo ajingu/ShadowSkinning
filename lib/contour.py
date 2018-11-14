@@ -3,10 +3,8 @@ import cv2
 from lib.binarization import to_binary_inv_image
 import matplotlib.pyplot as plt
 
-MAXIMUM_INNER_BLOB_AREA = 30
 
-
-def find_human_contour(src, binary_thresh=240):
+def find_human_contour(src, binary_thresh=240, maximum_inner_blob_area=30):
     binary_inv = to_binary_inv_image(src, binary_thresh)
     binary_inv[-1, :] = 0
     # plt.gray()
@@ -43,7 +41,8 @@ def find_human_contour(src, binary_thresh=240):
     # skip contours which include big inner blobs
     child_index = hierarchy[max_index][2]
     while child_index > -1:
-        if cv2.contourArea(contours[child_index]) > MAXIMUM_INNER_BLOB_AREA:
+        if cv2.contourArea(contours[child_index]) > maximum_inner_blob_area:
+            print("Too big inner blobs.")
             return None
 
         child_index = hierarchy[child_index][0]
