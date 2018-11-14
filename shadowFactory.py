@@ -10,7 +10,7 @@ from lib.OSCclient import OSCclient
 target_directory_path = "./images"
 
 model = "cmu"
-gpu_memory_fraction = 0.5
+gpu_memory_fraction = 0.3
 target_size = (512, 640)
 
 ip = "127.0.0.1"
