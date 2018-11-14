@@ -4,7 +4,7 @@ from lib.binarization import to_binary_inv_image
 import matplotlib.pyplot as plt
 
 
-def find_human_contour(src, binary_thresh=240, maximum_inner_blob_area=30):
+def find_human_contour(src, binary_thresh=240, maximum_inner_blob_area=1000):
     binary_inv = to_binary_inv_image(src, binary_thresh)
     binary_inv[-1, :] = 0
     # plt.gray()

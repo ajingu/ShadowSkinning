@@ -22,7 +22,7 @@ arrangement_interval = 30
 adjust_nose_position = False
 
 binary_thresh = 240
-maximum_inner_blob_area = 30
+maximum_inner_blob_area = 1000
 
 if __name__ == '__main__':
     if len(sys.argv) > 0:
