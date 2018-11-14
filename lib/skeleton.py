@@ -89,8 +89,6 @@ class SkeletonTest:
         self.isAcquired = np.zeros(NUMBER_OF_BODY_PARTS)
         self.isAcquired[body_part_indices] = 1
 
-        self.probability = [human.body_parts[joint_index].score for joint_index in body_part_indices]
-
         self.isWithinContour = [cv2.pointPolygonTest(human_contour,
                                                      (int(human.body_parts[joint_index].x * src_width + 0.5),
                                                       int(human.body_parts[joint_index].y * src_height + 0.5)),
@@ -99,15 +97,11 @@ class SkeletonTest:
 
     # Change conditions freely
     def is_reliable(self):
-        minimum_probability = 0.2
-
         all_joints_are_acquired = all(self.isAcquired)
-        all_joints_are_reliable = all([p > minimum_probability for p in self.probability])
         all_joints_are_within_contour = all(self.isWithinContour)
 
-        return all_joints_are_acquired and all_joints_are_reliable and all_joints_are_within_contour
+        return all_joints_are_acquired and all_joints_are_within_contour
 
     def report(self):
         print("Each joint is acquired:", self.isAcquired)
-        print("Probability:", self.probability)
         print("Each joint is within the contour:", self.isWithinContour)
