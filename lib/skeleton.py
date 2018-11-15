@@ -48,13 +48,6 @@ class SkeletonImplement:
 
         human = humans[0]
 
-        # skip wrists under neck
-        if 1 in human.body_parts and 4 in human.body_parts and 7 in human.body_parts:
-            neck_y, right_wrist_y, left_wrist_y = human.body_parts[1].y, human.body_parts[4].y, human.body_parts[7].y
-            if right_wrist_y > neck_y or left_wrist_y > neck_y:
-                print("Wrists are under neck.")
-                return None
-
         # adjust nose position
         if 16 in human.body_parts and 17 in human.body_parts:
             right_ear, left_ear = human.body_parts[16], human.body_parts[17]
@@ -64,6 +57,14 @@ class SkeletonImplement:
                 human.body_parts[0].y = nose_y
             else:
                 human.body_parts[0] = BodyPart("0-0", 0, nose_x, nose_y, 0.5)
+
+        # skip wrists under neck
+        if 1 in human.body_parts and 4 in human.body_parts and 7 in human.body_parts:
+            neck_y, right_wrist_y, left_wrist_y = human.body_parts[1].y, human.body_parts[4].y, \
+                                                  human.body_parts[7].y
+            if right_wrist_y > neck_y or left_wrist_y > neck_y:
+                print("Wrists are under neck.")
+                return None
 
         # skip unused joints
         for unused_index in [14, 15, 16, 17, 18]:
