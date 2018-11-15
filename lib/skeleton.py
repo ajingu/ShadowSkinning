@@ -51,7 +51,7 @@ class SkeletonImplement:
         # skip wrists under neck
         if 1 in human.body_parts and 4 in human.body_parts and 7 in human.body_parts:
             neck_y, right_wrist_y, left_wrist_y = human.body_parts[1].y, human.body_parts[4].y, human.body_parts[7].y
-            if right_wrist_y > neck_y and left_wrist_y > neck_y:
+            if right_wrist_y > neck_y or left_wrist_y > neck_y:
                 print("Wrists are under neck.")
                 return None
 
