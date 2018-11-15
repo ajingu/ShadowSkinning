@@ -27,7 +27,7 @@ class ImageGenerationEventHandler(PatternMatchingEventHandler):
             frame_index = os.path.splitext(os.path.basename(src_path))[0].split("_")[-1]
 
             # Avoid the case of not finishing generating images
-            time.sleep(0.1)
+            time.sleep(0.01)
 
             src = read_imgfile(src_path, None, None)
             if src is None:
